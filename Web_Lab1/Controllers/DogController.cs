@@ -96,10 +96,9 @@ namespace Web_Lab1.Controllers
         }
 
         /// <summary>
-        /// Delete a dog by id
+        /// Deletes a dog by id
         /// </summary>
         /// <param name="id">The id of dog that has to be deleted</param>
-        /// <returns></returns>
         [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Delete))]
         [HttpDelete("{id:int:min(1)}", Name = "DeleteDog")]
         public IActionResult Delete(int id)
