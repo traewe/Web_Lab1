@@ -8,18 +8,39 @@ namespace Web_Lab1.Controllers
     public class DogShelterController : ControllerBase
     {
         private readonly List<DogShelter> _dogShelters;
-        private readonly ILogger<DogShelterController> _logger;
 
-        public DogShelterController(ILogger<DogShelterController> logger)
+        public DogShelterController()
         {
-            _logger = logger;
-            _dogShelters = DataSet.DogShelters;
+            _dogShelters = DataSet.dogShelters;
         }
 
         [HttpGet(Name = "GetAllDogShelters")]
         public IEnumerable<DogShelter> GetAll()
         {
             return _dogShelters;
+        }
+
+        [HttpGet("{id:int:min(1)}", Name = "GetDogShelterById")]
+        public IActionResult Get(int id)
+        {
+            var shelter = _dogShelters.FirstOrDefault(shelter => shelter.Id == id);
+
+            return shelter != null ? Ok(shelter) : NotFound();
+        }
+
+        [HttpPost(Name = "AddDogShelter")]
+        public IActionResult Post([FromBody] DogShelter dogShelter)
+        {
+            if (dogShelter == null)
+            {
+                return NotFound();
+            }
+
+            dogShelter.Id = _dogShelters[_dogShelters.Count - 1].Id + 1;
+
+            _dogShelters.Add(dogShelter);
+
+            return CreatedAtAction(nameof(Get), new { id = dogShelter.Id }, dogShelter);
         }
     }
 }
