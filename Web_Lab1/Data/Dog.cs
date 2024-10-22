@@ -1,0 +1,12 @@
+﻿namespace Web_Lab1.Data
+{
+    public class Dog
+    {
+        public int Id { get; set; }
+        public string Breed { get; set; }
+        public int Age { get; set; }
+        public double Weight { get; set; }
+        public bool IsAvailableForAdoption { get; set;  }
+        public int ShelterId { get; set; }
+    }
+}
