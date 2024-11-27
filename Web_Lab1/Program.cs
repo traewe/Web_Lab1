@@ -8,6 +8,7 @@ using Web_Lab2.Repositories.Contracts;
 using Web_Lab2.Repositories;
 using FluentValidation.AspNetCore;
 using Web_Lab2.Configurations;
+using Web_Lab2.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ builder.Services.AddDbContext<DataModelContext>(options => {
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-//builder.Services.AddValidatorsFromAssemblyContaining<CreateProjectDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<DogCreateDtoValidator>();
 
 builder.Services.AddControllers();
 
