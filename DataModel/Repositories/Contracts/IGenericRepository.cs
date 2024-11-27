@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 
-namespace Web_Lab2.Repositories.Contracts
+namespace DataModel.Repositories.Contracts
 {
     public interface IGenericRepository<TEntity, TKey> where TEntity : class
     {

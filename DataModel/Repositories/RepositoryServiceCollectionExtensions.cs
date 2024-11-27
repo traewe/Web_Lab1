@@ -1,6 +1,8 @@
-﻿using Web_Lab2.Repositories.Contracts;
+﻿using DataModel.Repositories.Contracts;
+using DataModel.Repositories;
+using DataModel.Repositories;
 
-namespace Web_Lab2.Repositories
+namespace DataModel.Repositories
 {
     public static class RepositoryServiceCollectionExtensions
     {

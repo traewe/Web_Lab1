@@ -1,8 +1,8 @@
-﻿using Web_Lab2.Repositories.Contracts;
-using Web_Lab2.Entities;
+﻿using DataModel.Repositories.Contracts;
+using DataModel.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Web_Lab2.Repositories
+namespace DataModel.Repositories
 {
     internal class DogShelterRepository : GenericRepository<DogShelter, int>, IDogShelterRepository
     {

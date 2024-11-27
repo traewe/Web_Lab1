@@ -1,6 +1,6 @@
-﻿using Web_Lab2.Entities;
+﻿using DataModel.Entities;
 
-namespace Web_Lab2.Repositories.Contracts
+namespace DataModel.Repositories.Contracts
 {
     public interface IDogRepository : IGenericRepository<Dog, int>
     {

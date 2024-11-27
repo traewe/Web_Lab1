@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Web_Lab2.Entities;
+using DataModel.Entities;
 
 public class DataModelContext : DbContext
 {

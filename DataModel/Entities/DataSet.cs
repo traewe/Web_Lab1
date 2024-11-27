@@ -1,4 +1,4 @@
-﻿namespace Web_Lab2.Entities
+﻿/*namespace Web_Lab2.Entities
 {
     public class DataSet
     {
@@ -22,4 +22,4 @@
         public static int maxDogShelterId = dogShelters.Count;
         public static int maxDogId = dogs.Count;
     }
-}
+}*/

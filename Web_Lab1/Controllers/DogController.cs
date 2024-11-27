@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Web_Lab2.Entities;
 
 namespace Web_Lab2.Controllers
@@ -7,7 +9,7 @@ namespace Web_Lab2.Controllers
     [Route("api/[controller]")]
     public class DogController : ControllerBase
     {
-        private readonly List<Dog> _dogs;
+        private readonly IActionResultTypeMapper ;
 
         public DogController()
         {

@@ -1,6 +1,6 @@
-﻿using Web_Lab2.Repositories.Contracts;
+﻿using DataModel.Repositories.Contracts;
 
-namespace Web_Lab2.Repositories
+namespace DataModel.Repositories
 {
     internal class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey> where TEntity : class
     {

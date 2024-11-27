@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using Web_Lab2.Repositories;
-using Web_Lab2.Repositories.Contracts;
+using DataModel.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
