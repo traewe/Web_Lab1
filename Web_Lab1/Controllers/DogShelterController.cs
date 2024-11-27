@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Web_Lab1.Data;
+using Web_Lab2.Entities;
 
-namespace Web_Lab1.Controllers
+namespace Web_Lab2.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

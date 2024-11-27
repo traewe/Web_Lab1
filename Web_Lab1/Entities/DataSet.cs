@@ -1,4 +1,4 @@
-﻿namespace Web_Lab1.Data
+﻿namespace Web_Lab2.Entities
 {
     public class DataSet
     {
@@ -18,6 +18,7 @@
             new Dog { Id = 2, Name = "John", Breed = "Bulldog", Age = 2, Weight = 12, IsAvailableForAdoption = true, ShelterId = 1 },
             new Dog { Id = 3, Name = "Richard", Breed = "Greyhound", Age = 12, Weight = 20.8, IsAvailableForAdoption = true, ShelterId = 2 },
         };
+
         public static int maxDogShelterId = dogShelters.Count;
         public static int maxDogId = dogs.Count;
     }

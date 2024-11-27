@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Web_Lab1.Data;
+using Web_Lab2.Entities;
 
-namespace Web_Lab1.Controllers
+namespace Web_Lab2.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -122,7 +122,7 @@ namespace Web_Lab1.Controllers
                 return NotFound();
             }
 
-            if (dog.ShelterId <= 0 || DataSet.dogShelters.Count < dog.ShelterId || DataSet.dogShelters[dog.ShelterId - 1] == null)
+            if (dog.ShelterId <= 0 || DataSet.dogShelters.Count < dog.ShelterId || DataSet.dogShelters[dog.ShelterId == null ? 0 : Convert.ToInt32(dog.ShelterId) - 1] == null)
             {
                 return NotFound($"Dog shelter with ID {dog.ShelterId} was not found.");
             }
