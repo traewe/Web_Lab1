@@ -1,140 +1,120 @@
+using AutoMapper;
+using Web_Lab2.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Web_Lab1.Data;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Web_Lab2.Dtos.DogShelter;
+using Web_Lab2.Entities;
+using Web_Lab2.Dtos.Dog;
 
-namespace Web_Lab1.Controllers
+namespace Web_Lab2.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class DogShelterController : ControllerBase
     {
-        private readonly List<DogShelter> _dogShelters;
+        private readonly IMapper _mapper;
+        private readonly IDogShelterRepository _repository;
 
-        public DogShelterController()
+        public DogShelterController(IMapper mapper, IDogShelterRepository repository)
         {
-            _dogShelters = DataSet.dogShelters;
+            _mapper = mapper;
+            _repository = repository;
         }
 
-        /// <summary>
-        /// Returns a list of all shelters
-        /// </summary>
-        /// <returns>All created shelters</returns>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        [HttpGet(Name = "GetAllDogShelters")]
-        public IEnumerable<DogShelter> GetAll()
+        [HttpGet]
+        public Task<List<DogShelterOutputDto>> Get() => _mapper.ProjectTo<DogShelterOutputDto>(_repository.GetAll()).ToListAsync();
+
+        [HttpGet("{id}")]
+        public async Task<DogShelterOutputDto?> Get(int id)
         {
-            return _dogShelters;
+            var dog = await _repository.FindAsync(id);
+
+            return _mapper.Map<DogShelterOutputDto>(dog);
         }
 
-        /// <summary>
-        /// Returns a shelter by id
-        /// </summary>
-        /// <param name="id">The id of shelter that is searched</param>
-        /// <returns>shelter by id</returns>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        [HttpGet("{id:int:min(1)}", Name = "GetDogShelterById")]
-        public IActionResult Get(int id)
+        [HttpGet("{name}/{address}")]
+        public async Task<DogShelterOutputDto?> Get(string name, string address)
         {
-            var shelter = _dogShelters.FirstOrDefault(shelter => shelter.Id == id);
+            var dog = await _repository.FindByNameAndAddressAsync(name, address);
 
-            return shelter != null ? Ok(shelter) : NotFound();
+            return _mapper.Map<DogShelterOutputDto>(dog);
         }
 
-        /// <summary>
-        /// Creates a new shelter
-        /// </summary>
-        /// <param name="dogShelter">New shelter</param>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
-        [HttpPost(Name = "AddDogShelter")]
-        public IActionResult Post([FromBody] DogShelter dogShelter)
+        [HttpPost]
+        public async Task<IActionResult> Post(DogShelterCreateDto dto)
         {
-            var validationError = ValidateDogShelter(dogShelter);
+            await _repository.AddAsync(_mapper.Map<DogShelter>(dto));
 
-            if (validationError != null)
+            return Created();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, DogShelterCreateDto dto)
+        {
+            var dogShelter = await _repository.FindAsync(id);
+
+            if (dogShelter == null)
             {
-                return validationError;
+                return NotFound($"DogShelter with ID {id} was not found.");
             }
 
-            dogShelter.Id = DataSet.maxDogShelterId + 1;
-            DataSet.maxDogShelterId++;
+            _mapper.Map(dto, dogShelter);
 
-            _dogShelters.Add(dogShelter);
-
-            return CreatedAtAction(nameof(Get), new { id = dogShelter.Id }, dogShelter);
-        }
-
-        /// <summary>
-        /// Changes a shelter by id
-        /// </summary>
-        /// <param name="id">The id of shelter that has to be changed</param>
-        /// <param name="dogShelter">Changed shelter</param>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
-        [HttpPut("{id:int:min(1)}", Name = "ChangeDogShelter")]
-        public IActionResult Put(int id, DogShelter dogShelter)
-        {
-            var alreadyCreatedDogShelter = _dogShelters.FirstOrDefault(dogShelter => dogShelter.Id == id);
-
-            if (alreadyCreatedDogShelter == null)
-            {
-                return NotFound();
-            }
-
-            var validationError = ValidateDogShelter(dogShelter);
-
-            if (validationError != null)
-            {
-                return validationError;
-            }
-
-            alreadyCreatedDogShelter.Name = dogShelter.Name;
-            alreadyCreatedDogShelter.Address = dogShelter.Address;
-            alreadyCreatedDogShelter.ContactNumber = dogShelter.ContactNumber;
+            await _repository.UpdateAsync(dogShelter);
 
             return NoContent();
         }
 
-        /// <summary>
-        /// Deletes a shelter by id
-        /// </summary>
-        /// <param name="id">The id of shelter that has to be deleted</param>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Delete))]
-        [HttpDelete("{id:int:min(1)}", Name = "DeleteDogShelter")]
-        public IActionResult Delete(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var dogShelter = _dogShelters.FirstOrDefault(dogShelter => dogShelter.Id == id);
+            var dogShelter = await _repository.FindAsync(id);
 
             if (dogShelter == null)
             {
-                return NotFound();
+                return NotFound($"DogShelter with ID {id} was not found.");
             }
 
-            _dogShelters.Remove(dogShelter);
+            await _repository.DeleteAsync(dogShelter);
 
             return NoContent();
         }
 
-        private IActionResult ValidateDogShelter(DogShelter dogShelter)
+
+        /*private IActionResult ValidateDog(Dog dog)
         {
-            if (dogShelter == null)
+            if (dog == null)
             {
                 return NotFound();
             }
 
-            if (string.IsNullOrEmpty(dogShelter.Name) || dogShelter.Name == "string")
+            if (dog.ShelterId <= 0 || DataSet.dogShelters.Count < dog.ShelterId || DataSet.dogShelters[dog.ShelterId == null ? 0 : Convert.ToInt32(dog.ShelterId) - 1] == null)
+            {
+                return NotFound($"Dog shelter with ID {dog.ShelterId} was not found.");
+            }
+
+            if (dog.Age <= 0)
+            {
+                return BadRequest("Age is not acceptable.");
+            }
+
+            if (dog.Weight <= 0)
+            {
+                return BadRequest("Weight is not acceptable.");
+            }
+
+            if (string.IsNullOrEmpty(dog.Name) || dog.Name == "string")
             {
                 return BadRequest("Name is not acceptable.");
             }
 
-            if (string.IsNullOrEmpty(dogShelter.Address) || dogShelter.Address == "string")
+            if (string.IsNullOrEmpty(dog.Breed) || dog.Breed == "string")
             {
-                return BadRequest("Address is not acceptable.");
-            }
-
-            if (string.IsNullOrEmpty(dogShelter.ContactNumber) || dogShelter.ContactNumber == "string")
-            {
-                return BadRequest("Contact number is not acceptable.");
+                return BadRequest("Breed is not acceptable.");
             }
 
             return null;
-        }
+        }*/
     }
 }

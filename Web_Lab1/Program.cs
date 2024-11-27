@@ -1,21 +1,47 @@
-using Microsoft.OpenApi.Models;
-using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using FluentValidation;
+using Web_Lab2.Controllers;
+using Web_Lab2.Entities;
+using Microsoft.EntityFrameworkCore;
+using Web_Lab2.Repositories.Contracts;
+using Web_Lab2.Repositories;
+using FluentValidation.AspNetCore;
+using Web_Lab2.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<DataModelContext>(options => {
+    options.UseSqlite("Data Source=sample.db");
+});
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+//builder.Services.AddValidatorsFromAssemblyContaining<CreateProjectDtoValidator>();
+
 builder.Services.AddControllers();
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dog and dog shelters API", Version = "v1" });
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll",
+        b => b.AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod());
 });
+
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+builder.Services.AddScoped<IDogRepository, DogRepository>();
+builder.Services.AddScoped<IDogShelterRepository, DogShelterRepository>();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,6 +49,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 

@@ -1,4 +1,4 @@
-﻿namespace Web_Lab1.Data
+﻿namespace Web_Lab2.Entities
 {
     public class Dog
     {
@@ -8,6 +8,6 @@
         public int Age { get; set; }
         public double Weight { get; set; }
         public bool IsAvailableForAdoption { get; set;  }
-        public int ShelterId { get; set; }
+        public int? ShelterId { get; set; }
     }
 }
