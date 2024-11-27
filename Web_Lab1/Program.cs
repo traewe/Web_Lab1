@@ -1,17 +1,28 @@
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using DataModel.Repositories;
+using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Web_Lab2
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DataModelContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddControllers();
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            builder.Services.AddDbContext<DataModelContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            RepositoryServiceCollectionExtensions.AddRepositories(builder.Services);
 
-RepositoryServiceCollectionExtensions.AddRepositories(builder.Services);
+            
 
-builder.Services.AddControllers();
+            var app = builder.Build();
 
-var app = builder.Build();
+            app.MapControllers();
+            app.Run();
 
-app.MapControllers();
-app.Run();
+        }
+    }
+}

@@ -9,8 +9,7 @@ namespace DataModel.Repositories
         public DogShelterRepository(DataModelContext context)
             : base(context) { }
 
-        public Task<DogShelter?> FindByDogIdAsync(int dogId) => _context.Set<DogShelter>()
-            .Include(shelter => shelter.Dogs)
-            .FirstOrDefaultAsync(shelter => shelter.Dogs.Any(dog => dog.Id == dogId));
+        public Task<DogShelter?> FindByNameAndAdressAsync(string name, string address) => _context.Set<DogShelter>()
+            .FirstOrDefaultAsync(s => s.Name == name && s.Address == address);
     }
 }

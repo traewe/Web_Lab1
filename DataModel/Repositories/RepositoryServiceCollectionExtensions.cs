@@ -1,6 +1,5 @@
 ﻿using DataModel.Repositories.Contracts;
-using DataModel.Repositories;
-using DataModel.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DataModel.Repositories
 {

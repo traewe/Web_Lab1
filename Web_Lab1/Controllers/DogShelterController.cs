@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using Web_Lab2.Entities;
 
 namespace Web_Lab2.Controllers
@@ -138,3 +138,4 @@ namespace Web_Lab2.Controllers
         }
     }
 }
+*/

@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using DataModel.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Web_Lab2.Entities;
+using Microsoft.EntityFrameworkCore;
+using Web_Lab2.Dtos.Dog;
+using DataModel.Entities;
 
 namespace Web_Lab2.Controllers
 {
@@ -9,115 +12,76 @@ namespace Web_Lab2.Controllers
     [Route("api/[controller]")]
     public class DogController : ControllerBase
     {
-        private readonly IActionResultTypeMapper ;
+        private readonly IMapper _mapper;
+        private readonly IDogRepository _repository;
 
-        public DogController()
+        public DogController(IMapper mapper, IDogRepository repository)
         {
-            _dogs = DataSet.dogs;
+            _mapper = mapper;
+            _repository = repository;
         }
 
-        /// <summary>
-        /// Returns a list of all dogs
-        /// </summary>
-        /// <returns>All created dogs</returns>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        [HttpGet(Name = "GetAllDogs")]
-        public IEnumerable<Dog> GetAll()
+        [HttpGet]
+        public Task<List<DogOutputDto>> Get() => _mapper.ProjectTo<DogOutputDto>(_repository.GetAll()).ToListAsync();
+
+        [HttpGet("{id}")]
+        public async Task<DogOutputDto?> Get(int id)
         {
-            return _dogs;
+            var dog = await _repository.FindAsync(id);
+
+            return _mapper.Map<DogOutputDto>(dog);
         }
 
-        /// <summary>
-        /// Returns a dog by id
-        /// </summary>
-        /// <param name="id">The id of dog that is searched</param>
-        /// <returns>Dog by id</returns>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Get))]
-        [HttpGet("{id:int:min(1)}", Name = "GetDogById")]
-        public IActionResult Get(int id)
+        [HttpPost("{name}/{breed}")]
+        public async Task<DogOutputDto?> Get(string name, string breed)
         {
-            var dog = _dogs.FirstOrDefault(dog => dog.Id == id);
+            var dog = await _repository.FindByNameAndBreedAsync(name, breed);
 
-            return dog != null ? Ok(dog) : NotFound();
+            return _mapper.Map<DogOutputDto>(dog);
         }
 
-        /// <summary>
-        /// Creates a new dog
-        /// </summary>
-        /// <param name="dog">New dog</param>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Post))]
-        [HttpPost(Name = "AddDog")]
-        public IActionResult Post([FromBody] Dog dog)
+        [HttpPost]
+        public async Task<IActionResult> Post(DogCreateDto dto)
         {
-            var validationError = ValidateDog(dog);
+            await _repository.AddAsync(_mapper.Map<Dog>(dto));
 
-            if (validationError != null)
-            {
-                return validationError;
-            }
-
-            dog.Id = DataSet.maxDogId + 1;
-            DataSet.maxDogId++;
-
-            _dogs.Add(dog);
-
-            return CreatedAtAction(nameof(Get), new { id = dog.Id }, dog);
+            return Created();
         }
 
-        /// <summary>
-        /// Changes the dog by id
-        /// </summary>
-        /// <param name="id">The id of dog that has to be changed</param>
-        /// <param name="dog">Changed dog</param>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
-        [HttpPut("{id:int:min(1)}", Name = "ChangeDog")]
-        public IActionResult Put(int id, Dog dog)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, DogCreateDto dto)
         {
-            var alreadyCreatedDog = _dogs.FirstOrDefault(dog => dog.Id == id);
-
-            if (alreadyCreatedDog == null)
-            {
-                return NotFound();
-            }
-
-            var validationError = ValidateDog(dog);
-
-            if (validationError != null)
-            {
-                return validationError;
-            }
-
-            alreadyCreatedDog.Name = dog.Name;
-            alreadyCreatedDog.Breed = dog.Breed;
-            alreadyCreatedDog.Age = dog.Age;
-            alreadyCreatedDog.Weight = dog.Weight;
-            alreadyCreatedDog.IsAvailableForAdoption = dog.IsAvailableForAdoption;
-            alreadyCreatedDog.ShelterId = dog.ShelterId;
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Deletes a dog by id
-        /// </summary>
-        /// <param name="id">The id of dog that has to be deleted</param>
-        [ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Delete))]
-        [HttpDelete("{id:int:min(1)}", Name = "DeleteDog")]
-        public IActionResult Delete(int id)
-        {
-            var dog = _dogs.FirstOrDefault(dog => dog.Id == id);
+            var dog = await _repository.FindAsync(id);
 
             if (dog == null)
             {
-                return NotFound();
+                return NotFound($"Dog with ID {id} was not found.");
             }
 
-            _dogs.Remove(dog);
+            _mapper.Map(dto, dog);
+
+            await _repository.UpdateAsync(dog);
 
             return NoContent();
         }
 
-        private IActionResult ValidateDog(Dog dog)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var dog = await _repository.FindAsync(id);
+
+            if (dog == null)
+            {
+                return NotFound($"Dog with ID {id} was not found.");
+            }
+
+            await _repository.DeleteAsync(dog);
+
+            return NoContent();
+        }
+
+
+        /*private IActionResult ValidateDog(Dog dog)
         {
             if (dog == null)
             {
@@ -150,6 +114,6 @@ namespace Web_Lab2.Controllers
             }
 
             return null;
-        }
+        }*/
     }
 }

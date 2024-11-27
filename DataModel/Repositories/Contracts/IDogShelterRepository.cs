@@ -4,6 +4,6 @@ namespace DataModel.Repositories.Contracts
 {
     public interface IDogShelterRepository : IGenericRepository<DogShelter, int>
     {
-        Task<DogShelter?> FindByDogIdAsync(int id);
+        Task<DogShelter?> FindByNameAndAdressAsync(string name, string adress);
     }
 }

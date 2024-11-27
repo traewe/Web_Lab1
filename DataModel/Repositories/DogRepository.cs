@@ -1,5 +1,6 @@
 ﻿using DataModel.Repositories.Contracts;
 using DataModel.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataModel.Repositories
 {
@@ -7,5 +8,8 @@ namespace DataModel.Repositories
     {
         public DogRepository(DataModelContext context)
             : base(context) { }
+
+        public Task<Dog?> FindByNameAndBreedAsync(string name, string breed) => _context.Set<Dog>()
+            .FirstOrDefaultAsync(s => s.Name == name && s.Breed == breed);
     }
 }
