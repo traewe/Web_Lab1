@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Shelter Management</title>
+    <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+    <h1>Dog Shelter Management</h1>
+
+    <!-- Кнопка для завантаження списку собак -->
+    <h3>Dog List</h3>
+    <button onclick="displayDogs()">Show Dogs</button>
+    <div id="dog-list"></div>
+
+    <h3>Dog by ID</h3>
+    <input type="number" id="dog-id" placeholder="Enter Dog ID" required>
+    <button onclick="displayDogById()">Show Dog</button>
+    <div id="dog-by-id"></div>
+
+    <!-- Форма для пошуку собаки за іменем і породою -->
+    <h3>Dog by Name and Breed</h3>
+    <input type="text" id="dog-name" placeholder="Enter Dog Name" required>
+    <input type="text" id="dog-breed" placeholder="Enter Dog Breed" required>
+    <button onclick="displayDogByNameAndBreed()">Show Dog</button>
+    <div id="dog-by-name-and-breed"></div>
+
+    <h3>Dog List</h3>
+    <button onclick="displayDogs()">Show Dogs</button>
+    <div id="dog-list"></div>
+
+    <h3>Shelter List</h3>
+    <button onclick="displayShelters()">Show Shelters</button>
+    <div id="shelter-list"></div>
+
+    <h3>City List</h3>
+    <button onclick="displayCities()">Show Cities</button>
+    <div id="city-list"></div>
+
+    <h3>Options List</h3>
+    <button onclick="displayOptions()">Show Options</button>
+    <div id="option-list"></div>
+
+    <!-- Форма для додавання собаки -->
+    <h3>Add Dog</h3>
+    <form action="javascript:void(0);" method="POST" onsubmit="addDog()">
+        <input type="text" id="dog-name" placeholder="Dog Name" required>
+        <input type="text" id="dog-breed" placeholder="Breed" required>
+        <input type="submit" value="Add">
+    </form>
+
+    <script src="js/dog.js"></script>
+    <script src="js/shelter.js"></script>
+    <script src="js/option.js"></script>
+    <script src="js/city.js"></script>
+</body>
+</html>

@@ -36,7 +36,7 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
 
-        builder.Services.AddSwaggerGen();
+        //builder.Services.AddSwaggerGen();
 
         builder.Services.AddCors(options => {
             options.AddPolicy("AllowAll",
@@ -53,11 +53,14 @@ public class Program
 
         var app = builder.Build();
 
-        if (app.Environment.IsDevelopment())
+        /*if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-        }
+        }*/
+
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
 
         app.UseHttpsRedirection();
 
