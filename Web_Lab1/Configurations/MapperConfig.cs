@@ -10,11 +10,11 @@ namespace Web_Lab2.Configurations
     {
         public MapperConfig()
         {
-            CreateMap<Dog, DogOutputDto>().ReverseMap();
-            CreateMap<DogCreateDto, Dog>().ReverseMap();
+            CreateMap<Dog, DogOutputDto>();
+            CreateMap<DogCreateDto, Dog>();
 
-            CreateMap<DogShelter, DogShelterOutputDto>().ReverseMap();
-            CreateMap<DogShelterCreateDto, DogShelter>().ReverseMap();
+            CreateMap<DogShelter, DogShelterOutputDto>();
+            CreateMap<DogShelterCreateDto, DogShelter>();
         }
     }
 }

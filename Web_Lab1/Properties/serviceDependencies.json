@@ -5,6 +5,11 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:ProjectListingDbConnectionString"
     },
+    "mssql2": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:ConnectionString"
+    },
     "sqlite1": {
       "type": "sqlite",
       "connectionId": "ConnectionString"

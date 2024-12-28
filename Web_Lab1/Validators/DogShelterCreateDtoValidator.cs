@@ -9,10 +9,12 @@ namespace Web_Lab2.Validators
         {
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Shelter name is required.")
+            .NotEqual("string").WithMessage("Name cannot be equal «string»")
             .Length(2, 100).WithMessage("Shelter name must be between 2 and 100 characters.");
 
             RuleFor(x => x.Address)
                 .NotEmpty().WithMessage("Shelter address is required.")
+                .NotEqual("string").WithMessage("Name cannot be equal «string»")
                 .Length(10, 200).WithMessage("Address must be between 10 and 200 characters.");
 
             RuleFor(x => x.ContactNumber)
