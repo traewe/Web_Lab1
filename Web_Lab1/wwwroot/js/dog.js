@@ -85,8 +85,8 @@ async function displayDogById() {
 
 // Функція для відображення собаки за іменем та породою
 async function displayDogByNameAndBreed() {
-    const name = document.getElementById('dog-name').value;
-    const breed = document.getElementById('dog-breed').value;
+    const name = document.getElementById('dog-name-search').value;
+    const breed = document.getElementById('dog-breed-search').value;
 
     if (!name || !breed) {
         alert("Please enter both name and breed.");
@@ -108,5 +108,124 @@ async function displayDogByNameAndBreed() {
         `;
     } else {
         dogDiv.textContent = 'Dog not found or an error occurred.';
+    }
+}
+
+async function addDog(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('dog-name').value;
+    const breed = document.getElementById('dog-breed').value;
+    const age = document.getElementById('dog-age').value;
+    const weight = document.getElementById('dog-weight').value;
+    const isAvailableForAdoption = document.getElementById('dog-isAvailableForAdoption').checked;
+    const shelterId = document.getElementById('dog-shelterId').value || null;
+
+    if (!name || !breed || !age || !weight) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    if (!name || !breed || !age || !weight) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    if (!name || !breed || !age || !weight) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    if (!name || !breed || !age || !weight) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    if (isNaN(age) || isNaN(weight)) {
+        alert("Age and weight must be valid numbers.");
+        return;
+    }
+
+    if (age <= 0 || weight <= 0) {
+        alert("Age and weight must be positive values.");
+        return;
+    }
+
+    const dogData = {
+        name: name,
+        breed: breed,
+        age: parseInt(age),
+        weight: parseFloat(weight),
+        isAvailableForAdoption: isAvailableForAdoption,
+        shelterId: shelterId ? parseInt(shelterId) : null
+    };
+
+    try {
+        const response = await fetch('/api/Dog', {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(dogData)
+        })
+            .then((response) => response.json())
+            .then((json) => console.log(json));
+    } catch (error) {
+        console.error('Error adding dog:', error);
+    }
+}
+
+async function deleteDog() {
+    const dogId = document.getElementById('delete-dog-id').value;
+
+    if (!dogId) {
+        alert("Please enter a dog ID.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/Dog/${dogId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            document.getElementById('delete-dog-response').textContent = `Dog with ID ${dogId} deleted successfully.`;
+        } else {
+            const result = await response.json();
+            document.getElementById('delete-dog-response').textContent = `Error: ${result.message || 'Failed to delete dog.'}`;
+        }
+    } catch (error) {
+        console.error('Error deleting dog:', error);
+        document.getElementById('delete-dog-response').textContent = 'Error deleting dog.';
+    }
+}
+
+async function updateDog(event) {
+    event.preventDefault();
+
+    const dogId = document.getElementById('update-dog-id').value;
+    const name = document.getElementById('update-dog-name').value;
+    const breed = document.getElementById('update-dog-breed').value;
+    const age = document.getElementById('update-dog-age').value;
+    const weight = document.getElementById('update-dog-weight').value;
+    const isAvailableForAdoption = document.getElementById('update-dog-available').checked;
+    const shelterId = document.getElementById('update-dog-shelterId').value || null;
+
+    const dogData = {
+        Name: name,
+        Breed: breed,
+        Age: parseInt(age),
+        Weight: parseFloat(weight),
+        IsAvailableForAdoption: isAvailableForAdoption,
+        ShelterId: shelterId ? parseInt(shelterId) : null
+    };
+
+    try {
+        const response = await fetch(`/api/Dog/${dogId}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dogData)
+        });
+    } catch (error) {
+        console.error('Error updating dog:', error);
     }
 }

@@ -1,5 +1,4 @@
-﻿// Функція для отримання собак із API
-async function getCities() {
+﻿async function getCities() {
     try {
         const response = await fetch('/api/City/memory');
         if (!response.ok) {
@@ -8,15 +7,14 @@ async function getCities() {
         return await response.json();
     } catch (error) {
         console.error('Error fetching cities:', error);
-        return []; // Повернути порожній масив у разі помилки
+        return [];
     }
 }
 
-// Функція для відображення списку собак
 async function displayCities() {
     const cities = await getCities();
     const cityListDiv = document.getElementById("city-list");
-    cityListDiv.innerHTML = ''; // Очистити перед новим виведенням
+    cityListDiv.innerHTML = '';
 
     if (cities.length === 0) {
         cityListDiv.textContent = 'No cities available or an error occurred.';

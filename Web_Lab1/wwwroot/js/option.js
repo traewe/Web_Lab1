@@ -1,5 +1,4 @@
-﻿// Функція для отримання даних із API
-async function getOptions() {
+﻿async function getOptions() {
     try {
         const response = await fetch('/api/Options');
         if (!response.ok) {
@@ -8,15 +7,14 @@ async function getOptions() {
         return await response.json();
     } catch (error) {
         console.error('Error fetching options:', error);
-        return null; // Повернути null у разі помилки
+        return null;
     }
 }
 
-// Функція для відображення даних
 async function displayOptions() {
-    const data = await getOptions(); // Отримати відповідь з API
+    const data = await getOptions();
     const optionListDiv = document.getElementById("option-list");
-    optionListDiv.innerHTML = ''; // Очистити перед новим виведенням
+    optionListDiv.innerHTML = '';
 
     if (!data || !data.monitor) {
         optionListDiv.textContent = 'No options available or an error occurred.';
