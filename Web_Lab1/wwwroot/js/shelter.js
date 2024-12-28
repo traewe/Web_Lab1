@@ -1,5 +1,4 @@
-﻿// Функція для отримання притулків із API
-async function getShelters() {
+﻿async function getShelters() {
     try {
         const response = await fetch('/api/DogShelter');
         if (!response.ok) {
@@ -8,15 +7,14 @@ async function getShelters() {
         return await response.json();
     } catch (error) {
         console.error('Error fetching shelters:', error);
-        return []; // Повернути порожній масив у разі помилки
+        return []; 
     }
 }
 
-// Функція для відображення списку притулків
 async function displayShelters() {
     const shelters = await getShelters();
     const shelterListDiv = document.getElementById("shelter-list");
-    shelterListDiv.innerHTML = ''; // Очистити перед новим виведенням
+    shelterListDiv.innerHTML = '';
 
     if (shelters.length === 0) {
         shelterListDiv.textContent = 'No shelters available or an error occurred.';
@@ -24,7 +22,6 @@ async function displayShelters() {
     }
 
     shelters.forEach(shelter => {
-        // Створити елемент для притулку
         const shelterItem = document.createElement("div");
         shelterItem.innerHTML = `
             <h3>Shelter: ${shelter.name}</h3>
@@ -33,7 +30,6 @@ async function displayShelters() {
             <p>Contact Number: ${shelter.contactNumber}</p>
         `;
 
-        // Створити список собак для цього притулку
         const dogList = document.createElement("ul");
         if (shelter.dogs && shelter.dogs.length > 0) {
             shelter.dogs.forEach(dog => {
@@ -47,7 +43,6 @@ async function displayShelters() {
             shelterItem.appendChild(noDogs);
         }
 
-        // Додати список собак до елемента притулку
         shelterItem.appendChild(dogList);
         shelterListDiv.appendChild(shelterItem);
     });
@@ -62,11 +57,10 @@ async function getShelterById(id) {
         return await response.json();
     } catch (error) {
         console.error('Error fetching shelter by ID:', error);
-        return null; // Повертаємо null, якщо собака не знайдена
+        return null;
     }
 }
 
-// Функція для отримання собаки за іменем і породою з API
 async function getShelterByNameAndAddress(name, address) {
     try {
         const response = await fetch(`/api/DogShelter/${name}/${address}`);
@@ -76,11 +70,10 @@ async function getShelterByNameAndAddress(name, address) {
         return await response.json();
     } catch (error) {
         console.error('Error fetching shelter by name and address:', error);
-        return null; // Повертаємо null, якщо собака не знайдена
+        return null;
     }
 }
 
-// Функція для відображення собаки за ID
 async function displayShelterById() {
     const id = document.getElementById('shelter-id').value;
     if (!id) {
@@ -90,7 +83,7 @@ async function displayShelterById() {
 
     const shelter = await getShelterById(id);
     const shelterDiv = document.getElementById('shelter-by-id');
-    shelterDiv.innerHTML = ''; // Очищаємо перед відображенням нової інформації
+    shelterDiv.innerHTML = '';
 
     if (shelter) {
         shelterDiv.innerHTML = `
@@ -99,15 +92,26 @@ async function displayShelterById() {
             <p>Address: ${shelter.address}</p>
             <p>Contact Number: ${shelter.contactNumber}</p>
         `;
+
+        if (shelter.dogs && shelter.dogs.length > 0) {
+            const dogList = document.createElement('ul');
+            shelter.dogs.forEach(dog => {
+                const dogItem = document.createElement('li');
+                dogItem.textContent = `Name: ${dog.name}, Breed: ${dog.breed}, Age: ${dog.age}, Weight: ${dog.weight}`;
+                dogList.appendChild(dogItem);
+            });
+            shelterDiv.appendChild(dogList);
+        } else {
+            shelterDiv.innerHTML += `<p>No dogs found in this shelter.</p>`;
+        }
     } else {
         shelterDiv.textContent = 'Shelter not found or an error occurred.';
     }
 }
 
-// Функція для відображення собаки за іменем та породою
 async function displayShelterByNameAndAddress() {
-    const name = document.getElementById('shelter-name').value;
-    const address = document.getElementById('shelter-address').value;
+    const name = document.getElementById('shelter-name-search').value;
+    const address = document.getElementById('shelter-address-search').value;
 
     if (!name || !address) {
         alert("Please enter both name and address.");
@@ -116,7 +120,7 @@ async function displayShelterByNameAndAddress() {
 
     const shelter = await getShelterByNameAndAddress(name, address);
     const shelterDiv = document.getElementById('shelter-by-name-and-address');
-    shelterDiv.innerHTML = ''; // Очищаємо перед відображенням нової інформації
+    shelterDiv.innerHTML = '';
 
     if (shelter) {
         shelterDiv.innerHTML = `
@@ -125,33 +129,42 @@ async function displayShelterByNameAndAddress() {
             <p>Address: ${shelter.address}</p>
             <p>Contact Number: ${shelter.contactNumber}</p>
         `;
+
+        if (shelter.dogs && shelter.dogs.length > 0) {
+            const dogList = document.createElement('ul');
+            shelter.dogs.forEach(dog => {
+                const dogItem = document.createElement('li');
+                dogItem.textContent = `Name: ${dog.name}, Breed: ${dog.breed}, Age: ${dog.age}, Weight: ${dog.weight}`;
+                dogList.appendChild(dogItem);
+            });
+            shelterDiv.appendChild(dogList);
+        } else {
+            shelterDiv.innerHTML += `<p>No dogs found in this shelter.</p>`;
+        }
     } else {
         shelterDiv.textContent = 'Shelter not found or an error occurred.';
     }
 }
 
-async function addShelter(event) {
-    event.preventDefault(); // Запобігаємо перезавантаженню сторінки після натискання на кнопку "Submit"
 
-    // Збираємо дані з форми
+async function addShelter(event) {
+    event.preventDefault();
+
     const name = document.getElementById('shelter-name').value;
     const address = document.getElementById('shelter-address').value;
     const contactNumber = document.getElementById('shelter-contact').value;
 
-    // Перевірка на обов'язкові поля
     if (!name || !address || !contactNumber) {
         alert("Please fill in all required fields.");
         return;
     }
 
-    // Створюємо об'єкт притулку
     const shelterData = {
         name: name,
         address: address,
         contactNumber: contactNumber
     };
 
-    // Відправка даних на сервер через POST-запит
     try {
         const response = await fetch('/api/DogShelter', {
             method: 'POST',

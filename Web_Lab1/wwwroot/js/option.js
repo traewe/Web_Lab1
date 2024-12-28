@@ -23,7 +23,6 @@ async function displayOptions() {
 
     const monitor = data.monitor;
 
-    // Відобразити дані монітора
     const monitorItem = document.createElement("div");
     monitorItem.innerHTML = `
         <p>Phone Number: ${monitor.phoneNumber}</p>

@@ -1,5 +1,4 @@
-﻿// Функція для отримання собак із API
-async function getDogs() {
+﻿async function getDogs() {
     try {
         const response = await fetch('/api/Dog');
         if (!response.ok) {
@@ -8,15 +7,14 @@ async function getDogs() {
         return await response.json();
     } catch (error) {
         console.error('Error fetching dogs:', error);
-        return []; // Повернути порожній масив у разі помилки
+        return [];
     }
 }
 
-// Функція для відображення списку собак
 async function displayDogs() {
     const dogs = await getDogs();
     const dogListDiv = document.getElementById("dog-list");
-    dogListDiv.innerHTML = ''; // Очистити перед новим виведенням
+    dogListDiv.innerHTML = '';
 
     if (dogs.length === 0) {
         dogListDiv.textContent = 'No dogs available or an error occurred.';
@@ -39,11 +37,10 @@ async function getDogById(id) {
         return await response.json();
     } catch (error) {
         console.error('Error fetching dog by ID:', error);
-        return null; // Повертаємо null, якщо собака не знайдена
+        return null;
     }
 }
 
-// Функція для отримання собаки за іменем і породою з API
 async function getDogByNameAndBreed(name, breed) {
     try {
         const response = await fetch(`/api/Dog/${name}/${breed}`);
@@ -53,11 +50,10 @@ async function getDogByNameAndBreed(name, breed) {
         return await response.json();
     } catch (error) {
         console.error('Error fetching dog by name and breed:', error);
-        return null; // Повертаємо null, якщо собака не знайдена
+        return null;
     }
 }
 
-// Функція для відображення собаки за ID
 async function displayDogById() {
     const id = document.getElementById('dog-id').value;
     if (!id) {
@@ -67,7 +63,7 @@ async function displayDogById() {
 
     const dog = await getDogById(id);
     const dogDiv = document.getElementById('dog-by-id');
-    dogDiv.innerHTML = ''; // Очищаємо перед відображенням нової інформації
+    dogDiv.innerHTML = '';
 
     if (dog) {
         dogDiv.innerHTML = `
@@ -83,7 +79,6 @@ async function displayDogById() {
     }
 }
 
-// Функція для відображення собаки за іменем та породою
 async function displayDogByNameAndBreed() {
     const name = document.getElementById('dog-name-search').value;
     const breed = document.getElementById('dog-breed-search').value;
@@ -95,7 +90,7 @@ async function displayDogByNameAndBreed() {
 
     const dog = await getDogByNameAndBreed(name, breed);
     const dogDiv = document.getElementById('dog-by-name-and-breed');
-    dogDiv.innerHTML = ''; // Очищаємо перед відображенням нової інформації
+    dogDiv.innerHTML = '';
 
     if (dog) {
         dogDiv.innerHTML = `

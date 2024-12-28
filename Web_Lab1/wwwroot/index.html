@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
-    <h1>Dog Shelter Management</h1>
+    <h1>Dog Management</h1>
 
     <h3>Dog List</h3>
     <button onclick="displayDogs()">Show Dogs</button>
@@ -22,6 +22,7 @@
     <input type="text" id="dog-name-search" placeholder="Enter Dog Name" required>
     <input type="text" id="dog-breed-search" placeholder="Enter Dog Breed" required>
     <button onclick="displayDogByNameAndBreed()">Show Dog</button>
+    <div id="dog-by-name-and-breed"></div>
 
     <h3>Add Dog</h3>
     <form id="add-dog-form" onsubmit="addDog(event)">
@@ -62,6 +63,8 @@
         <input type="number" id="update-dog-shelterId" placeholder="Enter Shelter ID">
         <button type="submit">Update Dog</button>
     </form>
+
+    <h1>Dog Shelter Management</h1>
 
     <h3>Shelter List</h3>
     <button onclick="displayShelters()">Show Shelters</button>
@@ -105,9 +108,13 @@
         <button type="submit">Update Shelter</button>
     </form>
 
+    <h1>City Management</h1>
+
     <h3>City List</h3>
     <button onclick="displayCities()">Show Cities</button>
     <div id="city-list"></div>
+
+    <h1>Options Management</h1>
 
     <h3>Options List</h3>
     <button onclick="displayOptions()">Show Options</button>
